@@ -1,0 +1,11 @@
+jobs:
+  nix-flake-check:
+    runs-on: native
+    steps:
+    - uses: actions/checkout@v4
+    - name: Check flake
+      run: nix -Lv flake check
+    timeout-minutes: 60
+'on':
+  push: {}
+  workflow_dispatch: {}
