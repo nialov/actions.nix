@@ -39,7 +39,7 @@ repository and configure your own workflows.
     ({ self, inputs, config, flake-parts-lib, ... }@args:
       {
         imports = [
-          inputs.pre-commit-hooks.flakeModule
+          inputs.actions-nix.flakeModules.default
           # Module config for your repository (replace with your own below)
           # ./ci
         ];
