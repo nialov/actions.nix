@@ -1,4 +1,4 @@
-{ self, config, lib, flake-parts-lib, ... }: {
+{ config, lib, flake-parts-lib, ... }: {
   options = let inherit (lib) types;
   in {
 
@@ -9,7 +9,7 @@
     };
   };
   config = {
-    perSystem = { pkgs, self', ... }: {
+    perSystem = { pkgs, self', system, ... }: {
       pre-commit.settings.hooks = {
         render-ci = {
           inherit (config.flake.ci.pre-commit) enable;
@@ -17,7 +17,8 @@
           pass_filenames = false;
           always_run = true;
           description = "Render nix-configured workflow to respective ci file";
-          entry = "${self'.packages.render-ci}/bin/render-ci";
+          entry = let renderCI = (config.perSystem system).packages.render-ci;
+          in "${renderCI}/bin/render-ci";
         };
       };
 
