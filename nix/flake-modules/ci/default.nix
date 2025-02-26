@@ -27,7 +27,7 @@
           pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
           evaluatedCI = pkgs.writeTextFile {
             name = "evaluated-ci.json";
-            text = builtins.toJSON self.ci.workflows;
+            text = builtins.toJSON config.flake.ci.workflows;
           };
           cmdLine = lib.cli.toGNUCommandLineShell { } {
             evaluated-ci-path = evaluatedCI;
