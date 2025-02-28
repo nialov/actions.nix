@@ -2,7 +2,7 @@
   flake.ci = {
     pre-commit.enable = true;
     defaults = {
-      step = { runs-on = "native"; };
+      step = { runs-on = "ubuntu-latest"; };
       jobs = { timeout-minutes = 60; };
     };
     workflows = {
