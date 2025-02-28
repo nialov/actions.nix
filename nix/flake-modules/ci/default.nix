@@ -1,3 +1,10 @@
+# https://flake.parts/dogfood-a-reusable-module
+# The importApply argument. Use this to reference things defined locally,
+# as opposed to the flake where this is imported.
+# localFlake:
+localFlake:
+# Regular module arguments; self, inputs, etc all reference the final user flake,
+# where this module was imported.
 { config, lib, flake-parts-lib, ... }: {
   options = let inherit (lib) types;
   in {
@@ -7,6 +14,7 @@
         type = types.submoduleWith { modules = [ ./ci.nix ]; };
       };
     };
+
   };
   config = {
     perSystem = { pkgs, self', system, ... }: {
@@ -17,7 +25,7 @@
           pass_filenames = false;
           always_run = true;
           description = "Render nix-configured workflow to respective ci file";
-          entry = let renderCI = (config.perSystem system).packages.render-ci;
+          entry = let renderCI = self'.packages.render-ci;
           in "${renderCI}/bin/render-ci";
         };
       };

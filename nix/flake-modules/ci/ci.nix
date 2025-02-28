@@ -27,10 +27,6 @@ let
     # args:
     {
       options = {
-        # _name = lib.mkOption {
-        #   type = types.str;
-        #   default = args.config._module.args.name;
-        # };
         runs-on = lib.mkOption {
           type = types.str;
           default = config.defaults.step.runs-on;

@@ -2,14 +2,15 @@ inputs:
 let
 
   flakePart = inputs.flake-parts.lib.mkFlake { inherit inputs; }
-    ({ self, inputs, config, flake-parts-lib, ... }@args:
+    ({ self, inputs, config, flake-parts-lib, withSystem, ... }:
       let
         inherit (flake-parts-lib) importApply;
-        flakeModules = let ci = importApply ./flake-modules/ci args;
-        in {
-          inherit ci;
-          default = ci;
-        };
+        flakeModules =
+          let ci = importApply ./flake-modules/ci { inherit withSystem; };
+          in {
+            inherit ci;
+            default = ci;
+          };
 
       in {
         systems = [ "x86_64-linux" ];
