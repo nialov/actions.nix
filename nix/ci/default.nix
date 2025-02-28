@@ -11,6 +11,7 @@
           nix-flake-check = {
             steps = [
               { uses = "actions/checkout@v4"; }
+              { uses = "DeterminateSystems/nix-installer-action@v9"; }
               {
                 name = "Check flake";
                 run = "nix -Lv flake check";
