@@ -25,7 +25,7 @@
 
 ## Example
 
-See `ci/default.nix` for action configuration in `nix`. This is turned by the
+See `nix/ci/default.nix` for action configuration in `nix`. This is turned by the
 `pre-commit` hook, or by running `nix run .#render-ci`, into the workflow file
 in `.github/workflows/main.yaml`.
 
