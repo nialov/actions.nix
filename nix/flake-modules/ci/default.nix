@@ -30,7 +30,7 @@ localFlake:
         };
       };
 
-      packages.render-ci = pkgs.writeShellApplication {
+      packages.render-ci = (pkgs.writeShellApplication {
         name = "render-ci";
         text = let
           pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
@@ -44,7 +44,7 @@ localFlake:
         in ''
           ${pythonEnv}/bin/python3 ${./render.py} ${cmdLine}
         '';
-      };
+      }).overrideAttrs { preferLocalBuild = true; };
     };
 
   };
