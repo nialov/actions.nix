@@ -21,6 +21,8 @@ let
           # Module config for this repository
           ./ci
           ./devshell.nix
+          # Tests
+          ./tests
         ];
         flake = { inherit self flakeModules; };
 
