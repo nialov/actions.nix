@@ -8,6 +8,8 @@ let
     default = null;
   };
   stepModule = {
+    # Allow any attribute definitions
+    freeformType = lib.types.attrs;
     options = {
       name = mkNullStrOption;
       uses = mkNullStrOption;
@@ -26,6 +28,7 @@ let
   jobModule =
     # args:
     {
+      freeformType = lib.types.attrs;
       options = {
         runs-on = lib.mkOption {
           type = types.str;
@@ -53,6 +56,7 @@ let
       };
     };
   workflowsModule = {
+    freeformType = lib.types.attrs;
     options = {
       on = lib.mkOption {
         type = types.attrs;
