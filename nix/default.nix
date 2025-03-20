@@ -11,6 +11,7 @@ let
             inherit ci;
             default = ci;
           };
+        lib = import ./lib { inherit (inputs.nixpkgs) lib; };
 
       in {
         systems = [ "x86_64-linux" ];
@@ -24,7 +25,7 @@ let
           # Tests
           ./tests
         ];
-        flake = { inherit self flakeModules; };
+        flake = { inherit self flakeModules lib; };
 
       });
 
