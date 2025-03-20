@@ -1,4 +1,4 @@
-{
+{ inputs, ... }: {
   flake.ci = {
     pre-commit.enable = true;
     defaults = {
@@ -10,8 +10,11 @@
         jobs = {
           nix-flake-check = {
             steps = [
-              { uses = "actions/checkout@v4"; }
-              { uses = "DeterminateSystems/nix-installer-action@v9"; }
+              {
+                uses = "actions/checkout@v4";
+              }
+              # Use step definition from ./lib/steps.nix
+              inputs.self.lib.steps.DeterminateSystemsNixInstallerAction
               {
                 name = "Check flake";
                 run = "nix -Lv flake check";
