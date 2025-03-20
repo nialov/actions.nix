@@ -10,7 +10,7 @@
     };
 
     concurrency = {
-      groups = "pages";
+      group = "pages";
       cancel-in-progress = false;
     };
 
