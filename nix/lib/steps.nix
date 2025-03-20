@@ -55,8 +55,8 @@ let
         files = ''
           dist/*
         '';
-        env = { GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}"; };
       };
+      env = { GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}"; };
     };
 
     actionsUploadPagesArtifact = {
