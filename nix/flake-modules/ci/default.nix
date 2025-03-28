@@ -12,6 +12,9 @@ _localFlake:
     flake = flake-parts-lib.mkSubmoduleOptions {
       ci = lib.mkOption {
         type = types.submoduleWith { modules = [ ./ci.nix ]; };
+        description = ''
+          Configuration of actions.
+        '';
       };
     };
 

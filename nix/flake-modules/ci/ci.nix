@@ -33,6 +33,7 @@ let
         runs-on = lib.mkOption {
           type = types.str;
           default = config.defaults.step.runs-on;
+          defaultText = lib.literalExpression "defaults.step.runs-on";
         };
         steps = lib.mkOption {
           type =
@@ -43,6 +44,7 @@ let
         timeout-minutes = lib.mkOption {
           type = types.nullOr types.int;
           default = config.defaults.jobs.timeout-minutes;
+          defaultText = lib.literalExpression "defaults.jobs.timeout-minutes";
         };
         needs = lib.mkOption {
           type = types.nullOr (types.listOf types.str);
@@ -83,6 +85,10 @@ let
         type = types.attrsOf
           (lib.types.submoduleWith { modules = [ workflowsModule ]; });
         default = { };
+        description = ''
+          Attrs where key is the file in which you want the yaml configuration and
+          the value is the workflow definition in nix.
+        '';
       };
       defaults = {
         step = { runs-on = lib.mkOption { type = types.str; }; };
