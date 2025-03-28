@@ -28,6 +28,7 @@ let
   jobModule =
     # args:
     {
+      internal = true;
       freeformType = lib.types.attrs;
       options = {
         runs-on = lib.mkOption {
@@ -58,6 +59,7 @@ let
       };
     };
   workflowsModule = {
+    internal = true;
     freeformType = lib.types.attrs;
     options = {
       on = lib.mkOption {
@@ -91,8 +93,22 @@ let
         '';
       };
       defaults = {
-        step = { runs-on = lib.mkOption { type = types.str; }; };
-        jobs = { timeout-minutes = lib.mkOption { type = types.int; }; };
+        step = {
+          runs-on = lib.mkOption {
+            type = types.str;
+            description =
+              "https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on";
+
+          };
+        };
+        jobs = {
+          timeout-minutes = lib.mkOption {
+            type = types.int;
+            description =
+              "https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes";
+
+          };
+        };
       };
 
     };
