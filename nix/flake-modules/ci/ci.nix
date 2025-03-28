@@ -28,7 +28,6 @@ let
   jobModule =
     # args:
     {
-      internal = true;
       freeformType = lib.types.attrs;
       options = {
         runs-on = lib.mkOption {
@@ -59,7 +58,6 @@ let
       };
     };
   workflowsModule = {
-    internal = true;
     freeformType = lib.types.attrs;
     options = {
       on = lib.mkOption {
