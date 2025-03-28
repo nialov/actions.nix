@@ -1,4 +1,4 @@
-{ lib, utils, ... }:
+{ utils, ... }:
 
 let
   inherit (utils) isTag concatWithSpace;
