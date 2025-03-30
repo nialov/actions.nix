@@ -1,9 +1,11 @@
 { inputs, ... }: {
-  flake.ci = {
+  flake.actions-nix = {
     pre-commit.enable = true;
     defaults = {
-      step = { runs-on = "ubuntu-latest"; };
-      jobs = { timeout-minutes = 60; };
+      jobs = {
+        timeout-minutes = 60;
+        runs-on = "ubuntu-latest";
+      };
     };
     workflows = {
       ".github/workflows/main.yaml" = {

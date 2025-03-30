@@ -10,7 +10,7 @@ _localFlake:
   in {
 
     flake = flake-parts-lib.mkSubmoduleOptions {
-      ci = lib.mkOption {
+      actions-nix = lib.mkOption {
         type = types.submoduleWith { modules = [ ./ci.nix ]; };
         description = ''
           Configuration of actions.
@@ -21,25 +21,27 @@ _localFlake:
   };
   config = {
     perSystem = { pkgs, self', ... }: {
+      # TODO: Should definition not be automatic on flake-module import?
       pre-commit.settings.hooks = {
-        render-ci = {
-          inherit (config.flake.ci.pre-commit) enable;
-          name = "render-ci";
+        render-actions = {
+          inherit (config.flake.actions-nix.pre-commit) enable;
+          name = "render-workflows";
           pass_filenames = false;
           always_run = true;
           description = "Render nix-configured workflow to respective ci file";
-          entry = let renderCI = self'.packages.render-ci;
-          in "${renderCI}/bin/render-ci";
+          entry = let renderCI = self'.packages.render-workflows;
+          in "${renderCI}/bin/render-workflows";
         };
       };
 
-      packages.render-ci = (pkgs.writeShellApplication {
-        name = "render-ci";
+      # TODO: Should definition not be automatic on flake-module import?
+      packages.render-workflows = (pkgs.writeShellApplication {
+        name = "render-workflows";
         text = let
           pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
           evaluatedCI = pkgs.writeTextFile {
             name = "evaluated-ci.json";
-            text = builtins.toJSON config.flake.ci.workflows;
+            text = builtins.toJSON config.flake.actions-nix.workflows;
           };
           cmdLine = lib.cli.toGNUCommandLineShell { } {
             evaluated-ci-path = evaluatedCI;

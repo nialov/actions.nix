@@ -2,10 +2,10 @@
 
 ## Features
 
--   Contains a `nix` module in `nix/flake-modules/ci/` that converts
+-   Contains a `nix` module in `nix/flake-modules/actions-nix/` that converts
     `nix` configuration into GitHub/Gitea action syntax `yaml`
 -   Module contains definition of a `pre-commit` hook, using
-    `git-hooks.nix`, that converts `ci` configuration into respective
+    `git-hooks.nix`, that converts `actions-nix` configuration into respective
     workflow files in the path defined in configuration
 
 ## Why
@@ -26,7 +26,7 @@
 ## Example
 
 See `nix/ci/default.nix` for action configuration in `nix`. This is turned by the
-`pre-commit` hook, or by running `nix run .#render-ci`, into the workflow file
+`pre-commit` hook, or by running `nix run .#render-workflows`, into the workflow file
 in `.github/workflows/main.yaml`.
 
 ## Installation
