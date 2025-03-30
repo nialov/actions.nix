@@ -5,12 +5,13 @@ let
     ({ self, inputs, flake-parts-lib, withSystem, ... }:
       let
         inherit (flake-parts-lib) importApply;
-        flakeModules =
-          let ci = importApply ./flake-modules/ci { inherit withSystem; };
-          in {
-            inherit ci;
-            default = ci;
-          };
+        flakeModules = let
+          actions-nix =
+            importApply ./flake-modules/actions-nix { inherit withSystem; };
+        in {
+          inherit actions-nix;
+          default = actions-nix;
+        };
         lib = import ./lib { inherit (inputs.nixpkgs) lib; };
 
       in {
@@ -18,7 +19,7 @@ let
         imports = [
           inputs.pre-commit-hooks.flakeModule
           # Module definition
-          flakeModules.ci
+          flakeModules.actions-nix
           # Module config for this repository
           ./ci
           ./devshell.nix

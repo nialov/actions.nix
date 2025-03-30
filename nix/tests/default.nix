@@ -1,17 +1,19 @@
 {
-  perSystem = { config, pkgs, lib, ... }: {
+  perSystem = { config, pkgs, lib, self', ... }: {
 
     packages = {
       test-example = pkgs.writeTextFile {
         name = "test-example";
         text = builtins.toJSON (lib.evalModules {
           modules = [
-            ../flake-modules/ci/ci.nix
+            ../flake-modules/actions-nix/ci.nix
             {
               pre-commit.enable = true;
               defaults = {
-                step = { runs-on = "ubuntu-latest"; };
-                jobs = { timeout-minutes = 60; };
+                jobs = {
+                  timeout-minutes = 60;
+                  runs-on = "ubuntu-latest";
+                };
               };
               workflows = {
                 ".github/workflows/main.yaml" = {
@@ -38,6 +40,8 @@
         }).config;
       };
     };
+
+    checks = self'.packages;
 
   };
 }
