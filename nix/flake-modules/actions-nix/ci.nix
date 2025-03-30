@@ -91,8 +91,9 @@ let
 
           The pre-commit hook, generated using
           [git-hooks.nix](https://github.com/cachix/git-hooks.nix), converts
-          ci configuration into respective workflow files in the path defined
-          within the configuration, i.e. key in `actions-nix.workflows` attribute set
+          `flake.actions-nix.workflows` configuration into respective workflow
+          files in the path defined within the configuration, i.e. key in
+          `actions-nix.workflows` attribute set
         '';
       };
       render-package = {

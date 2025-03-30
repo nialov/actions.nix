@@ -28,7 +28,8 @@ _localFlake:
           name = "render-workflows";
           pass_filenames = false;
           always_run = true;
-          description = "Render nix-configured workflow to respective ci file";
+          description =
+            "Render nix-configured workflow to respective yaml file";
           entry = let renderCI = self'.packages.render-workflows;
           in "${renderCI}/bin/render-workflows";
         };
