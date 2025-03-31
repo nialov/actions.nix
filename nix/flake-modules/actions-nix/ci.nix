@@ -96,11 +96,11 @@ let
           `actions-nix.workflows` attribute set
         '';
       };
-      render-package = {
-        enable = lib.mkEnableOption ''
-          addition of a package definition to `perSystem.packages.render-workflows` for rendering workflows.
-        '';
-      };
+      # render-package = {
+      #   enable = lib.mkEnableOption ''
+      #     addition of a package definition to `perSystem.packages.render-workflows` for rendering workflows.
+      #   '';
+      # };
       workflows = lib.mkOption {
         type = types.attrsOf
           (lib.types.submoduleWith { modules = [ workflowsModule ]; });
