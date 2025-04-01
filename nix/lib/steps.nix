@@ -5,13 +5,13 @@ let
   steps = {
     actionsCheckout = { uses = "actions/checkout@v4"; };
     DeterminateSystemsNixInstallerAction = {
-      uses = "DeterminateSystems/nix-installer-action@v9";
+      uses = "DeterminateSystems/nix-installer-action@v16";
     };
     runNixFlakeCheck = {
       name = "Check flake";
       run = "nix -Lv flake check";
     };
-    cachixCachixAction = { uses = "cachix/cachix-action@v15"; };
+    cachixCachixAction = { uses = "cachix/cachix-action@v16"; };
     runBuildPackageWithPoetry = {
       name = "Build package with poetry";
       run = ''
