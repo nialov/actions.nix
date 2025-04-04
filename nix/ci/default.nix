@@ -15,7 +15,7 @@
               {
                 uses = "actions/checkout@v4";
               }
-              # Uses step definition from ./lib/steps.nix
+              # Uses step definition from ../lib/steps.nix
               inputs.self.lib.steps.DeterminateSystemsNixInstallerAction
               {
                 name = "Check flake";
