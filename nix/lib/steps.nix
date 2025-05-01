@@ -5,7 +5,7 @@ let
   steps = {
     actionsCheckout = { uses = "actions/checkout@v4"; };
     DeterminateSystemsNixInstallerAction = {
-      uses = "DeterminateSystems/nix-installer-action@v16";
+      uses = "DeterminateSystems/nix-installer-action@v17";
     };
     runNixFlakeCheck = {
       name = "Check flake";
