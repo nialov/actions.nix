@@ -1,7 +1,11 @@
 { inputs, ... }: {
   flake.actions-nix = {
     pre-commit.enable = true;
-    defaults = {
+    # defaults was renamed to defaultValues to avoid conflict
+    # with GitHub option
+    # https://github.com/nialov/actions.nix/issues/11
+    # defaults = {
+    defaultValues = {
       jobs = {
         timeout-minutes = 60;
         runs-on = "ubuntu-latest";

@@ -9,7 +9,7 @@
             ../flake-modules/actions-nix/ci.nix
             {
               pre-commit.enable = true;
-              defaults = {
+              defaultValues = {
                 jobs = {
                   timeout-minutes = 60;
                   runs-on = "ubuntu-latest";
