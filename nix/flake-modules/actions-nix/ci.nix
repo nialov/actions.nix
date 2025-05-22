@@ -34,8 +34,8 @@ let
       options = {
         runs-on = mkEmptyDescriptionOption {
           type = types.str;
-          default = config.defaults.jobs.runs-on;
-          defaultText = lib.literalExpression "defaults.jobs.runs-on";
+          default = config.defaultValues.jobs.runs-on;
+          defaultText = lib.literalExpression "defaultValues.jobs.runs-on";
         };
         steps = mkEmptyDescriptionOption {
           type =
@@ -45,8 +45,9 @@ let
         };
         timeout-minutes = mkEmptyDescriptionOption {
           type = types.nullOr types.int;
-          default = config.defaults.jobs.timeout-minutes;
-          defaultText = lib.literalExpression "defaults.jobs.timeout-minutes";
+          default = config.defaultValues.jobs.timeout-minutes;
+          defaultText =
+            lib.literalExpression "defaultValues.jobs.timeout-minutes";
         };
         needs = mkEmptyDescriptionOption {
           type = types.nullOr (types.listOf types.str);
@@ -139,18 +140,20 @@ let
           };
         };
       };
-      defaults = {
+      defaultValues = {
         jobs = {
           timeout-minutes = lib.mkOption {
-            type = types.int;
+            type = types.nullOr types.int;
             description = "Default value for timeout-minutes for jobs.";
+            default = null;
             example = 60;
 
           };
           runs-on = lib.mkOption {
             type = types.str;
             description = "Default value for runs-on for jobs.";
-            example = "ubuntu-latest";
+            default = "ubuntu-latest";
+            example = "macos-latest";
           };
         };
       };
@@ -158,6 +161,10 @@ let
     };
 
     config = { };
+    imports =
+      # TODO: Does not warn consistently
+      # Maybe related to: https://github.com/NixOS/nixpkgs/issues/96006
+      [ (lib.mkRenamedOptionModule [ "defaults" ] [ "defaultValues" ]) ];
 
   };
 
