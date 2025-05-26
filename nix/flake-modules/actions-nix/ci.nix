@@ -15,6 +15,7 @@ let
     options = {
       name = mkNullStrOption;
       uses = mkNullStrOption;
+      # TODO: Allow str lines which are then concatted nicely
       run = mkNullStrOption;
       "if" = mkNullStrOption;
       "with" = mkEmptyDescriptionOption {
