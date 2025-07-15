@@ -6,8 +6,9 @@ let
       let
         inherit (flake-parts-lib) importApply;
         flakeModules = let
-          actions-nix =
-            importApply ./flake-modules/actions-nix { inherit withSystem; };
+          actions-nix = importApply ./flake-modules/actions-nix {
+            inherit withSystem inputs;
+          };
         in {
           inherit actions-nix;
           default = actions-nix;
@@ -15,9 +16,9 @@ let
         lib = import ./lib { inherit (inputs.nixpkgs) lib; };
 
       in {
-        systems = [ "x86_64-linux" ];
+        systems = [ "x86_64-linux" "aarch64-darwin" ];
         imports = [
-          inputs.pre-commit-hooks.flakeModule
+          inputs.git-hooks.flakeModule
           # Module definition
           flakeModules.actions-nix
           # Module config for this repository
