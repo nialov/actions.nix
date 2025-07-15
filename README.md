@@ -33,11 +33,8 @@ in `.github/workflows/main.yaml`.
 
 ## Installation
 
-This project uses [flake-parts](https://github.com/hercules-ci/flake-parts) and
-[git-hooks.nix](https://github.com/cachix/git-hooks.nix). You need to add both
-as inputs to your `flake.nix` and import the modules exposed by this repository
-and `git-hooks.nix` to then be able to configure your own workflows. Example of
-the module importing is shown below:
+This project uses `flake-parts`. You need to add the module exposed by this
+repository and configure your own workflows.
 
 ```nix
   inputs.flake-parts.lib.mkFlake { inherit inputs; }
@@ -45,7 +42,6 @@ the module importing is shown below:
       {
         imports = [
           inputs.actions-nix.flakeModules.default
-          inputs.git-hooks.flakeModule
           # Module config for your repository (replace with your own below)
           # ./ci
         ];

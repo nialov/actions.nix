@@ -6,6 +6,7 @@ _localFlake:
 # Regular module arguments; self, inputs, etc all reference the final user flake,
 # where this module was imported.
 { config, lib, flake-parts-lib, ... }: {
+  imports = [ _localFlake.inputs.git-hooks.flakeModule ];
   options = let inherit (lib) types;
   in {
 
