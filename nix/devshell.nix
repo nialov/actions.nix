@@ -6,12 +6,18 @@
         shellHook = config.pre-commit.installationScript;
       };
     };
+    treefmt = {
+      flakeFormatter = true;
+      flakeCheck = true;
+      projectRootFile = "flake.nix";
+      programs.nixfmt.enable = true;
+    };
     pre-commit = {
       check.enable = true;
       settings = {
         src = ../.;
         hooks = {
-          nixfmt.enable = true;
+          treefmt.enable = true;
           statix.enable = true;
           deadnix.enable = true;
           commitizen.enable = true;

@@ -15,9 +15,11 @@ let
         lib = import ./lib { inherit (inputs.nixpkgs) lib; };
 
       in {
-        systems = [ "x86_64-linux" ];
+        systems = [ "x86_64-linux" "aarch64-darwin" ];
         imports = [
           inputs.pre-commit-hooks.flakeModule
+          inputs.treefmt-nix.flakeModule
+
           # Module definition
           flakeModules.actions-nix
           # Module config for this repository
@@ -27,7 +29,6 @@ let
           ./tests
         ];
         flake = { inherit self flakeModules lib; };
-
       });
 
 in flakePart
