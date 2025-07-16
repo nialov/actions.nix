@@ -1,27 +1,31 @@
 { lib, ... }:
 
 let
-  utils = let concatWithSpace = lib.concatStringsSep " ";
-  in {
-    inherit concatWithSpace;
+  utils =
+    let
+      concatWithSpace = lib.concatStringsSep " ";
+    in
+    {
+      inherit concatWithSpace;
 
-    isTag = concatWithSpace [
-      "github.event_name == 'push'"
-      "&&"
-      "startsWith(github.ref, 'refs/tags')"
-    ];
-    isMaster = concatWithSpace [
-      "github.event_name == 'push'"
-      "&&"
-      "startsWith(github.ref, 'refs/heads/master')"
+      isTag = concatWithSpace [
+        "github.event_name == 'push'"
+        "&&"
+        "startsWith(github.ref, 'refs/tags')"
+      ];
+      isMaster = concatWithSpace [
+        "github.event_name == 'push'"
+        "&&"
+        "startsWith(github.ref, 'refs/heads/master')"
 
-    ];
+      ];
 
-  };
+    };
   steps = import ./steps.nix { inherit lib utils; };
   jobs = import ./jobs.nix { inherit lib utils; };
 
-in {
+in
+{
 
   inherit steps jobs;
 
