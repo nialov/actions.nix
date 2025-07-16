@@ -1,4 +1,5 @@
-{ inputs, ... }: {
+{ inputs, ... }:
+{
   flake.actions-nix = {
     pre-commit.enable = true;
     # defaults was renamed to defaultValues to avoid conflict

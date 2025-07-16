@@ -1,34 +1,47 @@
 inputs:
 let
 
-  flakePart = inputs.flake-parts.lib.mkFlake { inherit inputs; }
-    ({ self, inputs, flake-parts-lib, withSystem, ... }:
-      let
-        inherit (flake-parts-lib) importApply;
-        flakeModules = let
-          actions-nix =
-            importApply ./flake-modules/actions-nix { inherit withSystem; };
-        in {
+  flakePart = inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+    {
+      self,
+      inputs,
+      flake-parts-lib,
+      withSystem,
+      ...
+    }:
+    let
+      inherit (flake-parts-lib) importApply;
+      flakeModules =
+        let
+          actions-nix = importApply ./flake-modules/actions-nix { inherit withSystem; };
+        in
+        {
           inherit actions-nix;
           default = actions-nix;
         };
-        lib = import ./lib { inherit (inputs.nixpkgs) lib; };
+      lib = import ./lib { inherit (inputs.nixpkgs) lib; };
 
-      in {
-        systems = [ "x86_64-linux" "aarch64-darwin" ];
-        imports = [
-          inputs.pre-commit-hooks.flakeModule
-          inputs.treefmt-nix.flakeModule
+    in
+    {
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
+      imports = [
+        inputs.pre-commit-hooks.flakeModule
+        inputs.treefmt-nix.flakeModule
 
-          # Module definition
-          flakeModules.actions-nix
-          # Module config for this repository
-          ./ci
-          ./devshell.nix
-          # Tests
-          ./tests
-        ];
-        flake = { inherit self flakeModules lib; };
-      });
+        # Module definition
+        flakeModules.actions-nix
+        # Module config for this repository
+        ./ci
+        ./devshell.nix
+        # Tests
+        ./tests
+      ];
+      flake = { inherit self flakeModules lib; };
+    }
+  );
 
-in flakePart
+in
+flakePart

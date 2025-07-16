@@ -3,7 +3,9 @@
 let
   inherit (utils) isTag concatWithSpace;
   steps = {
-    actionsCheckout = { uses = "actions/checkout@v4"; };
+    actionsCheckout = {
+      uses = "actions/checkout@v4";
+    };
     DeterminateSystemsNixInstallerAction = {
       uses = "DeterminateSystems/nix-installer-action@v17";
     };
@@ -11,7 +13,9 @@ let
       name = "Check flake";
       run = "nix -Lv flake check";
     };
-    cachixCachixAction = { uses = "cachix/cachix-action@v16"; };
+    cachixCachixAction = {
+      uses = "cachix/cachix-action@v16";
+    };
     runBuildPackageWithPoetry = {
       name = "Build package with poetry";
       run = ''
@@ -56,7 +60,9 @@ let
           dist/*
         '';
       };
-      env = { GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}"; };
+      env = {
+        GITHUB_TOKEN = "\${{ secrets.GITHUB_TOKEN }}";
+      };
     };
 
     actionsUploadPagesArtifact = {
@@ -95,4 +101,5 @@ let
     };
   };
 
-in steps
+in
+steps
