@@ -23,7 +23,10 @@
               inputs.self.lib.steps.DeterminateSystemsNixInstallerAction
               {
                 name = "Check flake";
-                run = "nix -Lv flake check";
+                run = ''
+                  nix -Lv flake check
+                  nix -Lv flake check --no-build
+                '';
               }
             ];
           };
