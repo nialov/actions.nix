@@ -3,8 +3,7 @@ let
 
   inherit (lib) types;
   filterNullAttrs = lib.filterAttrs (_key: value: value != null);
-  mkEmptyDescriptionOption = attrs:
-    lib.mkOption (lib.recursiveUpdate { description = ""; } attrs);
+  mkEmptyDescriptionOption = attrs: lib.mkOption (lib.recursiveUpdate { description = ""; } attrs);
   mkNullStrOption = mkEmptyDescriptionOption {
     type = types.nullOr types.str;
     default = null;
@@ -39,16 +38,14 @@ let
           defaultText = lib.literalExpression "defaultValues.jobs.runs-on";
         };
         steps = mkEmptyDescriptionOption {
-          type =
-            types.listOf (types.submoduleWith { modules = [ stepModule ]; });
+          type = types.listOf (types.submoduleWith { modules = [ stepModule ]; });
           default = [ ];
           apply = builtins.map filterNullAttrs;
         };
         timeout-minutes = mkEmptyDescriptionOption {
           type = types.nullOr types.int;
           default = config.defaultValues.jobs.timeout-minutes;
-          defaultText =
-            lib.literalExpression "defaultValues.jobs.timeout-minutes";
+          defaultText = lib.literalExpression "defaultValues.jobs.timeout-minutes";
         };
         needs = mkEmptyDescriptionOption {
           type = types.nullOr (types.listOf types.str);
@@ -76,8 +73,7 @@ let
       };
       jobs = lib.mkOption {
         type = types.attrsOf (types.submoduleWith { modules = [ jobModule ]; });
-        apply = lib.mapAttrs'
-          (name: value: lib.nameValuePair name (filterNullAttrs value));
+        apply = lib.mapAttrs' (name: value: lib.nameValuePair name (filterNullAttrs value));
         description = ''
           Configuration of jobs.
         '';
@@ -104,8 +100,7 @@ let
       #   '';
       # };
       workflows = lib.mkOption {
-        type = types.attrsOf
-          (lib.types.submoduleWith { modules = [ workflowsModule ]; });
+        type = types.attrsOf (lib.types.submoduleWith { modules = [ workflowsModule ]; });
         default = { };
         description = ''
           Attributes where key is the file in which you want the `yaml`
@@ -169,4 +164,5 @@ let
 
   };
 
-in ciModule
+in
+ciModule
