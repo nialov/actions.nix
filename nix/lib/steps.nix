@@ -7,7 +7,7 @@ let
       uses = "actions/checkout@v4";
     };
     DeterminateSystemsNixInstallerAction = {
-      uses = "DeterminateSystems/nix-installer-action@v17";
+      uses = "DeterminateSystems/nix-installer-action@v19";
     };
     runNixFlakeCheck = {
       name = "Check flake";
