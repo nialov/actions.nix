@@ -48,6 +48,34 @@ repository and configure your own workflows.
       });
 ```
 
+## Note on `git-hooks` Import Collisions
+
+The `actions-nix` module automatically imports its own version of `git-hooks`.  
+If you also explicitly import `git-hooks` in your downstream project, and the versions differ, this can cause an import collision.
+
+**Example of collision:**
+```nix
+imports = [
+  inputs.actions-nix.flakeModules.default
+  inputs.git-hooks.flakeModule  # Explicit import (may conflict)
+];
+```
+
+**How to avoid collisions:**  
+You can configure your flake inputs so that both your project and `actions-nix` use the same version of `git-hooks`.  
+For example, you can set your `git-hooks` input to follow the one used by `actions-nix`, or vice versa:
+
+```nix
+inputs.git-hooks.url = inputs.actions-nix.inputs.git-hooks.url;
+```
+or
+```nix
+inputs.actions-nix.inputs.git-hooks.url = inputs.git-hooks.url;
+```
+
+**Recommended:**  
+Let `actions-nix` handle the import, and avoid importing `git-hooks` directly unless you are certain the versions match.
+
 ## About
 
 This is a work-in-progress project. My plan is to implement all
