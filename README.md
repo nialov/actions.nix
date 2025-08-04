@@ -48,33 +48,54 @@ repository and configure your own workflows.
       });
 ```
 
-## Note on `git-hooks` Import Collisions
+## Note on `git-hooks` import collisions
 
-The `actions-nix` module automatically imports its own version of `git-hooks`.  
-If you also explicitly import `git-hooks` in your downstream project, and the versions differ, this can cause an import collision.
+The `actions-nix` module automatically imports `git-hooks`. If you also
+explicitly import `git-hooks` in your downstream project, and the versions
+differ, this can cause an import collision due to the module options being
+defined twice.
 
-**Example of collision:**
+**Example of collision potential in your flake:**
+
 ```nix
 imports = [
   inputs.actions-nix.flakeModules.default
-  inputs.git-hooks.flakeModule  # Explicit import (may conflict)
+  inputs.git-hooks.flakeModule  # Import may conflict as it is already implemented by actions-nix
 ];
 ```
 
-**How to avoid collisions:**  
-You can configure your flake inputs so that both your project and `actions-nix` use the same version of `git-hooks`.  
-For example, you can set your `git-hooks` input to follow the one used by `actions-nix`, or vice versa:
+**How to avoid collisions:**
+
+You do not have to import `git-hooks` in your flake if you imported the
+`actions-nix` module. Alternatively, configure your flake inputs so that
+both your project and `actions-nix` use the same version of `git-hooks`.
+For example, you can set your `git-hooks` input to follow the one used
+by `actions-nix`, or vice versa:
 
 ```nix
-inputs.git-hooks.url = inputs.actions-nix.inputs.git-hooks.url;
+actions-nix = {
+  url = "github:nialov/actions.nix";
+};
+git-hooks.follows = "actions-nix/git-hooks";
 ```
+
 or
+
 ```nix
-inputs.actions-nix.inputs.git-hooks.url = inputs.git-hooks.url;
+git-hooks = {
+  url = "github:cachix/git-hooks.nix";
+};
+
+actions-nix = {
+  url = "github:nialov/actions.nix";
+  inputs.git-hooks.follows = "nix-extra/pre-commit-hooks";
+};
 ```
 
-**Recommended:**  
-Let `actions-nix` handle the import, and avoid importing `git-hooks` directly unless you are certain the versions match.
+**Recommended:**
+
+Let `actions-nix` handle the import, and avoid importing `git-hooks`
+directly.
 
 ## About
 
