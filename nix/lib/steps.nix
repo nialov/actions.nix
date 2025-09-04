@@ -4,7 +4,7 @@ let
   inherit (utils) isTag concatWithSpace;
   steps = {
     actionsCheckout = {
-      uses = "actions/checkout@v4";
+      uses = "actions/checkout@v5";
     };
     DeterminateSystemsNixInstallerAction = {
       uses = "DeterminateSystems/nix-installer-action@v19";
@@ -66,7 +66,7 @@ let
     };
 
     actionsUploadPagesArtifact = {
-      uses = "actions/upload-pages-artifact@v3";
+      uses = "actions/upload-pages-artifact@v4";
 
     };
     actionsConfigurePages = {
