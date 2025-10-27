@@ -14,6 +14,11 @@
     };
     workflows = {
       ".github/workflows/main.yaml" = {
+        on = {
+          push.branches = [ "master" ];
+          workflow_dispatch = { };
+          pull_request = { };
+        };
         jobs = {
           nix-flake-check = {
             steps = [

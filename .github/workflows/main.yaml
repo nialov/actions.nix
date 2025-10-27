@@ -8,5 +8,8 @@ jobs:
       run: nix -Lv flake check
     timeout-minutes: 60
 'on':
-  push: {}
+  pull_request: {}
+  push:
+    branches:
+    - master
   workflow_dispatch: {}
