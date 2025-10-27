@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
-
   inherit (lib) types;
+  inherit (config) defaultValues;
   filterNullAttrs = lib.filterAttrs (_key: value: value != null);
   mkEmptyDescriptionOption = attrs: lib.mkOption (lib.recursiveUpdate { description = ""; } attrs);
   mkNullStrOption = mkEmptyDescriptionOption {
@@ -27,24 +27,22 @@ let
       };
     };
   };
-  jobModule =
-    # args:
-    {
+  jobModule = { config, ... }: {
       freeformType = lib.types.attrs;
       options = {
         runs-on = mkEmptyDescriptionOption {
-          type = types.str;
-          default = config.defaultValues.jobs.runs-on;
+          type = types.nullOr types.str;
+          default = if config.steps != null then defaultValues.jobs.runs-on else null;
           defaultText = lib.literalExpression "defaultValues.jobs.runs-on";
         };
         steps = mkEmptyDescriptionOption {
-          type = types.listOf (types.submoduleWith { modules = [ stepModule ]; });
-          default = [ ];
-          apply = builtins.map filterNullAttrs;
+          type = types.nullOr (types.listOf (types.submoduleWith { modules = [ stepModule ]; }));
+          default = null;
+          apply = steps: if steps != null then builtins.map filterNullAttrs steps else null;
         };
         timeout-minutes = mkEmptyDescriptionOption {
           type = types.nullOr types.int;
-          default = config.defaultValues.jobs.timeout-minutes;
+          default = defaultValues.jobs.timeout-minutes;
           defaultText = lib.literalExpression "defaultValues.jobs.timeout-minutes";
         };
         needs = mkEmptyDescriptionOption {
