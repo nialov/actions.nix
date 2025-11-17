@@ -23,10 +23,11 @@ let
     };
   steps = import ./steps.nix { inherit lib utils; };
   jobs = import ./jobs.nix { inherit lib utils; };
+  evalModule = import ./eval-module.nix { inherit lib utils; };
 
 in
 {
 
-  inherit steps jobs;
+  inherit steps jobs evalModule;
 
 }
