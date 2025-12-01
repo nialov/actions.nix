@@ -23,7 +23,7 @@
           nix-flake-check = {
             steps = [
               {
-                uses = "actions/checkout@v5";
+                uses = "actions/checkout@v6";
               }
               # Uses step definition from ../lib/steps.nix
               inputs.self.lib.steps.DeterminateSystemsNixInstallerAction
