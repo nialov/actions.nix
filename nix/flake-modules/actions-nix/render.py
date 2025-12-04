@@ -47,7 +47,7 @@ def main(evaluated_ci_path: Optional[Path]):
                 "--option",
                 "experimental-features",
                 "nix-command flakes",
-                ".#ci.workflows",
+                ".#actions-nix.workflows",
                 "--json",
             ],
             text=True,
