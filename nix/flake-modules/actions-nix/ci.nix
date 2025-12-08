@@ -27,7 +27,9 @@ let
       };
     };
   };
-  jobModule = { config, ... }: {
+  jobModule =
+    { config, ... }:
+    {
       freeformType = lib.types.attrs;
       options = {
         runs-on = mkEmptyDescriptionOption {
