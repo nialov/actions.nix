@@ -125,7 +125,7 @@ let
               nix-flake-check = {
                 steps = [
                   { uses = "actions/checkout@v4"; }
-                  { uses = "DeterminateSystems/nix-installer-action@v9"; }
+                  { uses = "cachix/install-nix-action@v31"; }
                   {
                     name = "Check flake";
                     run = "nix -Lv flake check";
