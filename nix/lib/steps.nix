@@ -9,6 +9,9 @@ let
     DeterminateSystemsNixInstallerAction = {
       uses = "DeterminateSystems/nix-installer-action@v21";
     };
+    cachixNixInstallerAction = {
+      uses = "cachix/install-nix-action@v31";
+    };
     runNixFlakeCheck = {
       name = "Check flake";
       run = "nix -Lv flake check";
