@@ -60,7 +60,7 @@ _localFlake:
                   name = "evaluated-ci.json";
                   text = builtins.toJSON config.flake.actions-nix.workflows;
                 };
-                cmdLine = lib.cli.toGNUCommandLineShell { } {
+                cmdLine = lib.cli.toCommandLineShellGNU { } {
                   evaluated-ci-path = evaluatedCI;
                 };
               in
