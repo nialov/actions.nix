@@ -31,7 +31,7 @@ _localFlake:
     };
   config = {
     perSystem =
-      { pkgs, self', ... }:
+      { pkgs, ... }:
       {
         # TODO: Should definition not be automatic on flake-module import?
         pre-commit.settings.hooks = {
@@ -41,11 +41,14 @@ _localFlake:
             pass_filenames = false;
             always_run = true;
             description = "Render nix-configured workflow to respective yaml file";
+            # Don't use packages.render-workflows here - its evaluated JSON is
+            # frozen at devshell entry time. Instead, run render.py without
+            # --evaluated-ci-path so it does a fresh `nix eval` at commit time.
             entry =
               let
-                renderCI = self'.packages.render-workflows;
+                pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
               in
-              "${renderCI}/bin/render-workflows";
+              "${pythonEnv}/bin/python3 ${./render.py}";
           };
         };
 

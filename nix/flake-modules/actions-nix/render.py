@@ -47,7 +47,7 @@ def main(evaluated_ci_path: Optional[Path]):
                 "--option",
                 "experimental-features",
                 "nix-command flakes",
-                ".#ci.workflows",
+                ".#actions-nix.workflows",
                 "--json",
             ],
             text=True,
@@ -74,4 +74,8 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--evaluated-ci-path", required=False)
     args = argparser.parse_args()
-    main(evaluated_ci_path=Path(args.evaluated_ci_path))
+    main(
+        evaluated_ci_path=Path(args.evaluated_ci_path)
+        if args.evaluated_ci_path
+        else None
+    )
