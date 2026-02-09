@@ -44,6 +44,9 @@ _localFlake:
             entry =
               let
                 renderCI = self'.packages.render-workflows;
+                # To override the default behavior of outputting workflow files at the git repo root, pass
+                #   --no-prepend-git-root
+                # to this script; this will cause workflow files to be written relative to the process working directory instead.
               in
               "${renderCI}/bin/render-workflows";
           };
@@ -53,6 +56,7 @@ _localFlake:
         packages.render-workflows =
           (pkgs.writeShellApplication {
             name = "render-workflows";
+            runtimeInputs = [ pkgs.git ];
             text =
               let
                 pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
