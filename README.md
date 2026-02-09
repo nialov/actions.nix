@@ -31,6 +31,16 @@ See `nix/ci/default.nix` for action configuration in `nix`. This is turned by th
 `pre-commit` hook, or by running `nix run .#render-workflows`, into the workflow file
 in `.github/workflows/main.yaml`.
 
+### Advanced: control relative path with `--no-prepend-git-root`
+
+By default, workflow files will be rendered relative to the git repo root. To write workflow files relative to the process working directory (CWD), run:
+
+```
+nix run .#render-workflows -- --no-prepend-git-root
+```
+
+This is useful when you want files output somewhere *other* than the git root (e.g., when scripting or testing in a subdirectory).
+
 ## Installation
 
 This project uses `flake-parts`. You need to add the module exposed by this
