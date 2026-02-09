@@ -41,6 +41,18 @@ nix run .#render-workflows -- --no-prepend-git-root
 
 This is useful when you want files output somewhere *other* than the git root (e.g., when scripting or testing in a subdirectory).
 
+#### Passing the flag in pre-commit configuration
+
+If you need to add arguments (such as `--no-prepend-git-root`) to the pre-commit hook invocation, you can do so, e.g., using the `raw.args` option in your Nix flake configuration:
+
+```nix
+pre-commit.settings.hooks.render-actions = {
+  raw.args = [
+    "--no-prepend-git-root"
+  ];
+};
+```
+
 ## Installation
 
 This project uses `flake-parts`. You need to add the module exposed by this
