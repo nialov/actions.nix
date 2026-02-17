@@ -129,3 +129,29 @@ The aim is to be minimal and allow free-form configuration by users instead of
 trying to generate it using logic in this project. Main purpose of this project
 is to enable writing action logic in `nix` rather than `yaml`. The
 opportunities opened by using `nix` are then mainly left for users to exploit.
+
+## Development
+
+**Format code:**
+
+```sh
+nix develop -c pre-commit run --all-files
+```
+
+**Check flake and evaluate tests:**
+
+```sh
+nix flake check
+```
+
+**Test workflow rendering locally:**
+
+```sh
+nix run .#render-workflows
+```
+
+**Check past commit conventions:**
+
+```sh
+git log --oneline
+```
