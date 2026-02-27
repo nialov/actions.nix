@@ -48,8 +48,6 @@ repository and configure your own workflows.
       });
 ```
 
-## Advanced
-
 ### Note on `git-hooks` import collisions
 
 The `actions-nix` module automatically imports `git-hooks`. If you also
@@ -98,6 +96,8 @@ actions-nix = {
 
 Let `actions-nix` handle the import, and avoid importing `git-hooks`
 directly.
+
+## Advanced
 
 ### Control relative path with `--no-prepend-git-root`
 
