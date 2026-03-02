@@ -97,6 +97,12 @@ actions-nix = {
 Let `actions-nix` handle the import, and avoid importing `git-hooks`
 directly.
 
+## Documentation
+
+The `flake.parts` website hosts the module option documentation:
+
+-   <https://flake.parts/options/actions-nix.html>
+
 ## Advanced
 
 ### Control relative path with `--no-prepend-git-root`
