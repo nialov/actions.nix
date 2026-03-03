@@ -64,9 +64,21 @@ _localFlake:
                   name = "evaluated-ci.json";
                   text = builtins.toJSON config.flake.actions-nix.workflows;
                 };
-                cmdLine = lib.cli.toCommandLineShellGNU { } {
-                  evaluated-ci-path = evaluatedCI;
-                };
+                cmdLine =
+                  let
+
+                    # For backwards compatibility
+                    toCommandLineShell =
+                      if builtins.hasAttr "toCommandLineShellGNU" lib.cli then
+                        # Correct attribute as of ~nixos-25.11
+                        lib.cli.toCommandLineShellGNU
+                      else
+                        lib.cli.toGNUCommandLineShell;
+
+                  in
+                  toCommandLineShell { } {
+                    evaluated-ci-path = evaluatedCI;
+                  };
               in
               ''
                 ${pythonEnv}/bin/python3 ${./render.py} ${cmdLine}
