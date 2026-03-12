@@ -140,7 +140,7 @@ let
           description = "Default value for 'on' for workflows.";
           default = {
             push = { };
-            # workflow_dispatch = { };
+            workflow_dispatch = { };
           };
           example = {
             push = { };
