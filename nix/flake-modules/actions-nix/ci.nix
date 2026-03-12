@@ -63,13 +63,11 @@ let
     options = {
       on = lib.mkOption {
         type = types.attrs;
-        default = {
-          push = { };
-          workflow_dispatch = { };
-        };
+        default = defaultValues."on";
         description = ''
           Trigger(s) to automatically trigger a workflow.
         '';
+        defaultText = lib.literalExpression "defaultValues.on";
       };
       jobs = lib.mkOption {
         type = types.attrsOf (types.submoduleWith { modules = [ jobModule ]; });
@@ -137,6 +135,17 @@ let
         };
       };
       defaultValues = {
+        "on" = lib.mkOption {
+          type = types.attrs;
+          description = "Default value for 'on' for workflows.";
+          default = {
+            push = { };
+            # workflow_dispatch = { };
+          };
+          example = {
+            push = { };
+          };
+        };
         jobs = {
           timeout-minutes = lib.mkOption {
             type = types.nullOr types.int;
