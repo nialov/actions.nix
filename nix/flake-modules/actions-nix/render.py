@@ -37,17 +37,19 @@ def yaml_multiline_string_pipe(dumper, data):
 
 yaml.add_representer(str, yaml_multiline_string_pipe)
 
-def get_git_toplevel() -> Path:
-    result = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        text=True,
-        capture_output=True,
-        check=True,
-    )
-    return Path(result.stdout.strip())
+def get_repo_root() -> Path:
+    for cmd in [["jj", "root"], ["git", "rev-parse", "--show-toplevel"]]:
+        result = subprocess.run(
+            cmd,
+            text=True,
+            capture_output=True,
+        )
+        if result.returncode == 0:
+            return Path(result.stdout.strip())
+    raise RuntimeError("Neither jj nor git found a repository root")
 
 def main(evaluated_ci_path: Optional[Path], prepend_git_root: bool = True):
-    git_toplevel = get_git_toplevel() if prepend_git_root else None
+    git_toplevel = get_repo_root() if prepend_git_root else None
 
     if evaluated_ci_path is None:
         eval_process = partial(
