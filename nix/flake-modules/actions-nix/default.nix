@@ -56,7 +56,10 @@ _localFlake:
         packages.render-workflows =
           (pkgs.writeShellApplication {
             name = "render-workflows";
-            runtimeInputs = [ pkgs.git ];
+            runtimeInputs = [
+              pkgs.git
+              pkgs.jj
+            ];
             text =
               let
                 pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
