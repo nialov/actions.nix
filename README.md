@@ -139,6 +139,20 @@ pre-commit.settings.hooks.render-actions = {
 };
 ```
 
+### Using Jujutsu (jj) to find the repo root
+
+There is built-in, optional support for Jujutsu VCS via the option:
+
+```nix
+flake.actions-nix.useJJ = true # default: `false`
+```
+
+If enabled, locating the repo root will be tried with jj first and fallback to the usual approach git.
+
+This is useful if you use jj workspaces where there isn't a git root available or if you don't use git-backed repos.
+
+The `--no-prepend-git-root` flag also affects this option.
+
 ## About
 
 This is a work-in-progress project. My plan is to implement all
