@@ -92,6 +92,17 @@ let
           `actions-nix.workflows` attribute set
         '';
       };
+      useJJ = lib.mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to use jj (Jujutsu) for repository root detection
+          instead of git during workflow rendering. When enabled, jj will be
+          used to find the repository root and fallback to git as normal. This
+          is useful if you use jj workspaces where there isn't a git root
+          available.
+        '';
+      };
       # render-package = {
       #   enable = lib.mkEnableOption ''
       #     addition of a package definition to `perSystem.packages.render-workflows` for rendering workflows.

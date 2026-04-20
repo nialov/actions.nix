@@ -37,19 +37,24 @@ def yaml_multiline_string_pipe(dumper, data):
 
 yaml.add_representer(str, yaml_multiline_string_pipe)
 
-def get_repo_root() -> Path:
-    for cmd in [["jj", "root"], ["git", "rev-parse", "--show-toplevel"]]:
+def get_repo_root(use_jj: bool = False) -> Path:
+    cmds = []
+    if use_jj:
+        cmds.append(["jj", "workspace", "root"])
+    cmds.append(["git", "rev-parse", "--show-toplevel"])
+    for cmd in cmds:
         result = subprocess.run(
             cmd,
             text=True,
             capture_output=True,
+            stdin=subprocess.DEVNULL,
         )
         if result.returncode == 0:
             return Path(result.stdout.strip())
-    raise RuntimeError("Neither jj nor git found a repository root")
+    raise RuntimeError("Repository root could not be found")
 
-def main(evaluated_ci_path: Optional[Path], prepend_git_root: bool = True):
-    git_toplevel = get_repo_root() if prepend_git_root else None
+def main(evaluated_ci_path: Optional[Path], prepend_git_root: bool = True, use_jj: bool = False):
+    git_toplevel = get_repo_root(use_jj=use_jj) if prepend_git_root else None
 
     if evaluated_ci_path is None:
         eval_process = partial(
@@ -94,9 +99,15 @@ if __name__ == "__main__":
         action="store_true",
         help="Do not prepend the git repo root to workflow paths"
     )
+    argparser.add_argument(
+        "--use-jj",
+        action="store_true",
+        help="Use jj (Jujutsu) for repository root detection and fallback to git"
+    )
     args = argparser.parse_args()
     main(
         evaluated_ci_path=Path(args.evaluated_ci_path) if args.evaluated_ci_path else None,
         prepend_git_root=not args.no_prepend_git_root,
+        use_jj=args.use_jj,
     )
 
