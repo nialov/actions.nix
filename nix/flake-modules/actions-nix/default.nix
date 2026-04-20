@@ -58,8 +58,8 @@ _localFlake:
             name = "render-workflows";
             runtimeInputs = [
               pkgs.git
-              pkgs.jj
-            ];
+            ]
+            ++ lib.optional config.flake.actions-nix.useJJ pkgs.jj;
             text =
               let
                 pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
@@ -67,9 +67,14 @@ _localFlake:
                   name = "evaluated-ci.json";
                   text = builtins.toJSON config.flake.actions-nix.workflows;
                 };
-                cmdLine = lib.cli.toCommandLineShellGNU { } {
-                  evaluated-ci-path = evaluatedCI;
-                };
+                cmdLine = lib.cli.toCommandLineShellGNU { } (
+                  {
+                    evaluated-ci-path = evaluatedCI;
+                  }
+                  // lib.optionalAttrs config.flake.actions-nix.useJJ {
+                    use-jj = true;
+                  }
+                );
               in
               ''
                 ${pythonEnv}/bin/python3 ${./render.py} ${cmdLine}
