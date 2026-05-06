@@ -117,11 +117,26 @@ without, e.g., ``lib.mkForce`` as ``defaultValues`` only sets the ``default``
 option value. Note that ``defaultValues`` have themselves opinionated default
 values which you should override to fit your needs.
 
+### Secrets
+
+GitHub/Gitea Actions secret references (e.g. `${{ secrets.MY_SECRET }}`) must be
+**escaped** in Nix strings to prevent Nix from interpreting the `${{...}}`
+syntax. Prefix the `$` with a backslash. E.g.
+
+```nix
+env = {
+  API_TOKEN_GITHUB = "\${{ secrets.WEBSITE_DEPLOY }}";
+};
+```
+
+This produces the correct literal string `${{ secrets.WEBSITE_DEPLOY }}` in the
+rendered `yaml`. See `nix/lib/steps.nix` for examples of this escaping in use.
+
 ### Control relative path with `--no-prepend-git-root`
 
 By default, workflow files will be rendered relative to the git repo root. To write workflow files relative to the process working directory (CWD), run:
 
-```
+```bash
 nix run .#render-workflows -- --no-prepend-git-root
 ```
 
