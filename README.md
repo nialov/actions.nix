@@ -112,7 +112,7 @@ The `flake.parts` website hosts the module option documentation:
 
 ## Advanced
 
-### Note on `git-hooks` import collisions with ``flake-parts``
+### Note on `git-hooks` import collisions with `flake-parts`
 
 The `actions-nix` module automatically imports `git-hooks`. If you also
 explicitly import `git-hooks` in your downstream project, and the versions
@@ -163,14 +163,14 @@ directly.
 
 ### Setting of default values
 
-A convenience is provided in the form of ``flake.actions-nix.defaultValues``.
+A convenience is provided in the form of `flake.actions-nix.defaultValues`.
 Setting these options sets the defaults for those value options across
 workflows and jobs. For example, by setting
-``flake.actions-nix.defaultValues.jobs.runs-on = "ubuntu-latest"``, all
-workflows (``flake.actions-nix.workflows.<name>``) will have the ``runs-on``
+`flake.actions-nix.defaultValues.jobs.runs-on = "ubuntu-latest"`, all
+workflows (`flake.actions-nix.workflows.<name>`) will have the `runs-on`
 property set to that default. Overriding individually will still work normally
-without, e.g., ``lib.mkForce`` as ``defaultValues`` only sets the ``default``
-option value. Note that ``defaultValues`` have themselves opinionated default
+without, e.g., `lib.mkForce` as `defaultValues` only sets the `default`
+option value. Note that `defaultValues` have themselves opinionated default
 values which you should override to fit your needs.
 
 ### Secrets
