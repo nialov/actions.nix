@@ -32,7 +32,6 @@
           name = "test-example-eval-module";
           text = builtins.toJSON (builtins.removeAttrs evalExample.config [ "build" ]);
         };
-        test-example-render-workflows = evalExample.config.build.renderWorkflows;
       };
 
       checks =
@@ -120,7 +119,7 @@
 
         in
         {
-          inherit (self'.packages) test-example test-example-eval-module test-example-render-workflows;
+          inherit (self'.packages) test-example test-example-eval-module;
 
           eval-module-matches-example = pkgs.runCommand "eval-module-matches-example" { } ''
             diff ${self'.packages.test-example} ${self'.packages.test-example-eval-module}
@@ -130,7 +129,7 @@
           eval-module-render-workflows-example = pkgs.runCommand "eval-module-render-workflows-example" { } ''
             mkdir $out
             cd $out
-            ${self'.packages.test-example-render-workflows}/bin/render-workflows --no-prepend-git-root
+            ${evalExample.config.build.renderWorkflows}/bin/render-workflows --no-prepend-git-root
             ${pkgs.action-validator}/bin/action-validator .github/workflows/main.yaml
           '';
 
