@@ -62,23 +62,13 @@ You can also use the plain library API, similar to `treefmt-nix`: write an
 
   outputs = { self, nixpkgs, actions-nix }:
     let
-      eachSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-darwin" ];
-      actionsEval = eachSystem (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        actions-nix.lib.evalModule pkgs ./ci.nix
-      );
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      actionsEval = actions-nix.lib.evalModule pkgs ./ci.nix;
     in
     {
-      packages = eachSystem (system: {
-        render-workflows = actionsEval.${system}.config.build.renderWorkflows;
-      });
-
-      checks = eachSystem (system: {
-        actions = actionsEval.${system}.config.build.check self;
-      });
+      packages.${system}.render-workflows = actionsEval.config.build.renderWorkflows;
+      checks.${system}.actions = actionsEval.config.build.check self;
     };
 }
 ```

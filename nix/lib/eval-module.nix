@@ -37,6 +37,7 @@ let
         evaluatedCI = lib.mkOption {
           type = lib.types.package;
           readOnly = true;
+          internal = true;
           description = "Evaluated workflows as JSON.";
         };
         renderWorkflows = lib.mkOption {
