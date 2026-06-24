@@ -73,6 +73,11 @@ and evaluate it yourself.
 }
 ```
 
+`config.build.check self` verifies that the workflow files already
+committed in the flake source match what `actions-nix` would generate.
+
+## Usage
+
 Example `ci.nix`:
 
 ```nix
@@ -96,11 +101,18 @@ Then run:
 nix run .#render-workflows
 ```
 
-`render-workflows` updates files in your checkout. `config.build.check self`
-verifies that the workflow files already committed in the flake source match
-what `actions-nix` would generate.
+`render-workflows` then creates or overwrites files in the `git` root
+according to `ci.nix`.
 
-### Note on `git-hooks` import collisions
+## Documentation
+
+The `flake.parts` website hosts the module option documentation:
+
+-   <https://flake.parts/options/actions-nix.html>
+
+## Advanced
+
+### Note on `git-hooks` import collisions with ``flake-parts``
 
 The `actions-nix` module automatically imports `git-hooks`. If you also
 explicitly import `git-hooks` in your downstream project, and the versions
@@ -149,14 +161,6 @@ actions-nix = {
 Let `actions-nix` handle the import, and avoid importing `git-hooks`
 directly.
 
-## Documentation
-
-The `flake.parts` website hosts the module option documentation:
-
--   <https://flake.parts/options/actions-nix.html>
-
-## Advanced
-
 ### Setting of default values
 
 A convenience is provided in the form of ``flake.actions-nix.defaultValues``.
@@ -186,17 +190,21 @@ rendered `yaml`. See `nix/lib/steps.nix` for examples of this escaping in use.
 
 ### Control relative path with `--no-prepend-git-root`
 
-By default, workflow files will be rendered relative to the git repo root. To write workflow files relative to the process working directory (CWD), run:
+By default, workflow files will be rendered relative to the `git` repo root. To
+write workflow files relative to the process working directory, run:
 
 ```bash
 nix run .#render-workflows -- --no-prepend-git-root
 ```
 
-This is useful when you want files output somewhere *other* than the git root (e.g., when scripting or testing in a subdirectory).
+This is useful when you want files output somewhere *other* than the git
+root (e.g., when scripting or testing in a subdirectory).
 
 #### Passing the flag in pre-commit configuration
 
-If you need to add arguments (such as `--no-prepend-git-root`) to the pre-commit hook invocation, you can do so, e.g., using the `raw.args` option in your Nix flake configuration:
+If you need to add arguments (such as `--no-prepend-git-root`) to the
+pre-commit hook invocation, you can do so, e.g., using the `raw.args`
+option in your Nix flake configuration:
 
 ```nix
 pre-commit.settings.hooks.render-actions = {
