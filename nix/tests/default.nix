@@ -41,6 +41,9 @@
             {
               exampleConfig,
               testCmd,
+              extraCmdLine ? { },
+              nativeBuildInputs ? [ ],
+              setupCmd ? "",
             }:
             let
               evaluatedCI = pkgs.writeTextFile {
@@ -54,17 +57,21 @@
                       ];
                     }).config.workflows;
               };
-              cmdLine = lib.cli.toCommandLineShellGNU { } {
-                evaluated-ci-path = evaluatedCI;
-                no-prepend-git-root = true;
-              };
+              cmdLine = lib.cli.toCommandLineShellGNU { } (
+                {
+                  evaluated-ci-path = evaluatedCI;
+                  no-prepend-git-root = true;
+                }
+                // extraCmdLine
+              );
               pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
             in
 
-            pkgs.runCommand "render-workflows" { } (
+            pkgs.runCommand "render-workflows" { inherit nativeBuildInputs; } (
               ''
                 mkdir $out
                 cd $out
+                ${setupCmd}
                 ${pythonEnv}/bin/python3 ${../flake-modules/actions-nix/render.py} ${cmdLine}
               ''
               + testCmd
@@ -158,6 +165,30 @@
             testCmd = ''
               echo "Check action yaml files with action-validator which both should exist"
               ${pkgs.parallel}/bin/parallel -- ${pkgs.action-validator}/bin/action-validator ::: .github/workflows/main.yaml .github/workflows/format.yaml
+            '';
+          };
+          use-jj-example = mkRenderedTestExample {
+            exampleConfig = nixFlakeCheckValidConfig // {
+              useJJ = true;
+            };
+            extraCmdLine = {
+              no-prepend-git-root = null;
+              use-jj = true;
+            };
+            nativeBuildInputs = [ pkgs.jujutsu ];
+            setupCmd = ''
+              mkdir nested
+              cd nested
+              jj git init repo --no-colocate
+              cd repo
+              mkdir child
+              cd child
+            '';
+            testCmd = ''
+              echo "Check that workflow was written to the jj workspace root"
+              test -f ../.github/workflows/main.yaml
+              test ! -e .github/workflows/main.yaml
+              ${pkgs.action-validator}/bin/action-validator ../.github/workflows/main.yaml
             '';
           };
 
