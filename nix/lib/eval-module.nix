@@ -10,6 +10,10 @@ let
         name = "evaluated-ci.json";
         text = builtins.toJSON config.workflows;
       };
+      workflowPaths = pkgs.writeTextFile {
+        name = "workflow-paths.txt";
+        text = lib.concatStringsSep "\n" (builtins.attrNames config.workflows);
+      };
       cmdLine = lib.cli.toCommandLineShellGNU { } (
         {
           evaluated-ci-path = evaluatedCI;
@@ -59,11 +63,10 @@ let
 
               ${renderWorkflows}/bin/render-workflows --no-prepend-git-root
 
-              if [ -d ${src}/.github/workflows ]; then
-                diff -r ${src}/.github/workflows .github/workflows
-              else
-                test ! -e .github/workflows
-              fi
+              while IFS= read -r workflow; do
+                [ -n "$workflow" ] || continue
+                diff ${src}/"$workflow" "$workflow"
+              done < ${workflowPaths}
 
               touch $out
             '';

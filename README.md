@@ -106,6 +106,10 @@ Then run:
 nix run .#render-workflows
 ```
 
+`render-workflows` updates files in your checkout. `config.build.check self`
+verifies that the workflow files already committed in the flake source match
+what `actions-nix` would generate.
+
 ### Note on `git-hooks` import collisions
 
 The `actions-nix` module automatically imports `git-hooks`. If you also

@@ -16,6 +16,7 @@
       packages = {
         test-example = pkgs.writeTextFile {
           name = "test-example";
+          # build is added by lib.evalModule only; strip it so this stays a config-parity check.
           text = builtins.toJSON (
             builtins.removeAttrs
               (lib.evalModules {
