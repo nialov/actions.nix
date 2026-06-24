@@ -24,7 +24,12 @@ in
 
       flake = flake-parts-lib.mkSubmoduleOptions {
         actions-nix = lib.mkOption {
-          type = types.submoduleWith { modules = [ ./ci.nix ]; };
+          type = types.submoduleWith {
+            modules = [
+              ./ci.nix
+              ./ci-flake-parts.nix
+            ];
+          };
           description = ''
             Configuration of actions.
           '';
@@ -38,20 +43,23 @@ in
       let
         actionsEval = actionsNixLib.evalModule pkgs config.flake.actions-nix;
       in
-      {
-        # TODO: Should definition not be automatic on flake-module import?
-        pre-commit.settings.hooks.render-actions = {
-          inherit (config.flake.actions-nix.pre-commit) enable;
-          name = "render-workflows";
-          pass_filenames = false;
-          always_run = true;
-          description = "Render nix-configured workflow to respective yaml file";
-          entry = "${actionsEval.config.build.renderWorkflows}/bin/render-workflows";
-        };
-
-        # TODO: Should definition not be automatic on flake-module import?
-        packages.render-workflows = actionsEval.config.build.renderWorkflows;
-      };
+      lib.mkMerge [
+        (lib.mkIf config.flake.actions-nix.pre-commit.enable {
+          # TODO: Should definition not be automatic on flake-module import?
+          pre-commit.settings.hooks.render-actions = {
+            enable = lib.mkDefault true;
+            name = "render-workflows";
+            pass_filenames = false;
+            always_run = true;
+            description = "Render nix-configured workflow to respective yaml file";
+            entry = "${actionsEval.config.build.renderWorkflows}/bin/render-workflows";
+          };
+        })
+        {
+          # TODO: Should definition not be automatic on flake-module import?
+          packages.render-workflows = actionsEval.config.build.renderWorkflows;
+        }
+      ];
 
   };
 }

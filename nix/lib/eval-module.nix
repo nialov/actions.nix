@@ -22,7 +22,7 @@ let
           use-jj = true;
         }
       );
-      renderWorkflows =
+      package =
         (pkgs.writeShellApplication {
           name = "render-workflows";
           runtimeInputs = [ pkgs.git ] ++ lib.optional config.useJJ pkgs.jj;
@@ -40,7 +40,7 @@ let
           internal = true;
           description = "Evaluated workflows as JSON.";
         };
-        renderWorkflows = lib.mkOption {
+        package = lib.mkOption {
           type = lib.types.package;
           readOnly = true;
           description = "Wrapper package for rendering workflows.";
@@ -53,7 +53,7 @@ let
       };
 
       config.build = {
-        inherit evaluatedCI renderWorkflows;
+        inherit evaluatedCI package;
         check =
           src:
           pkgs.runCommandLocal "actions-nix-check"
@@ -62,7 +62,7 @@ let
               mkdir project
               cd project
 
-              ${renderWorkflows}/bin/render-workflows --no-prepend-git-root
+              ${package}/bin/render-workflows --no-prepend-git-root
 
               while IFS= read -r workflow; do
                 [ -n "$workflow" ] || continue
