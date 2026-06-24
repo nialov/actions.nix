@@ -1,14 +1,31 @@
 # Tests for the creation of workflow files
+{ inputs, ... }:
 {
   perSystem =
     {
       pkgs,
       lib,
+      self',
       ...
     }:
     {
 
       packages = {
+        test-example = pkgs.writeTextFile {
+          name = "test-example";
+          text =
+            builtins.toJSON
+              (lib.evalModules {
+                modules = [
+                  ../flake-modules/actions-nix/ci.nix
+                  ./ci-config.nix
+                ];
+              }).config;
+        };
+        test-example-eval-module = pkgs.writeTextFile {
+          name = "test-example-eval-module";
+          text = builtins.toJSON (inputs.self.lib.evalModule ./ci-config.nix).config;
+        };
       };
 
       checks =
@@ -96,6 +113,12 @@
 
         in
         {
+          inherit (self'.packages) test-example test-example-eval-module;
+
+          eval-module-matches-example = pkgs.runCommand "eval-module-matches-example" { } ''
+            diff ${self'.packages.test-example} ${self'.packages.test-example-eval-module}
+            touch $out
+          '';
 
           nix-flake-check-example = mkRenderedTestExample {
             exampleConfig = nixFlakeCheckValidConfig;

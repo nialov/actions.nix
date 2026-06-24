@@ -1,6 +1,8 @@
 { inputs, ... }:
 {
   flake.actions-nix = {
+
+    imports = [ ];
     pre-commit.enable = true;
     # defaults was renamed to defaultValues to avoid conflict
     # with GitHub option
