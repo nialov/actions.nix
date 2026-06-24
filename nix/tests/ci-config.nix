@@ -14,7 +14,6 @@
             { uses = "actions/checkout@v4"; }
             {
               uses = "DeterminateSystems/nix-installer-action@v9";
-              hello = "there";
             }
             {
               name = "Check flake";

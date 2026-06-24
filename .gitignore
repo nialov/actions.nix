@@ -2,3 +2,4 @@
 /.direnv
 .aider*
 result*
+/.cache
