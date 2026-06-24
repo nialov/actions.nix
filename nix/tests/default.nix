@@ -8,24 +8,30 @@
       self',
       ...
     }:
+    let
+      evalExample = inputs.self.lib.evalModule pkgs ./ci-config.nix;
+    in
     {
 
       packages = {
         test-example = pkgs.writeTextFile {
           name = "test-example";
-          text =
-            builtins.toJSON
+          text = builtins.toJSON (
+            builtins.removeAttrs
               (lib.evalModules {
                 modules = [
                   ../flake-modules/actions-nix/ci.nix
                   ./ci-config.nix
                 ];
-              }).config;
+              }).config
+              [ "build" ]
+          );
         };
         test-example-eval-module = pkgs.writeTextFile {
           name = "test-example-eval-module";
-          text = builtins.toJSON (inputs.self.lib.evalModule ./ci-config.nix).config;
+          text = builtins.toJSON (builtins.removeAttrs evalExample.config [ "build" ]);
         };
+        test-example-render-workflows = evalExample.config.build.renderWorkflows;
       };
 
       checks =
@@ -113,11 +119,18 @@
 
         in
         {
-          inherit (self'.packages) test-example test-example-eval-module;
+          inherit (self'.packages) test-example test-example-eval-module test-example-render-workflows;
 
           eval-module-matches-example = pkgs.runCommand "eval-module-matches-example" { } ''
             diff ${self'.packages.test-example} ${self'.packages.test-example-eval-module}
             touch $out
+          '';
+
+          eval-module-render-workflows-example = pkgs.runCommand "eval-module-render-workflows-example" { } ''
+            mkdir $out
+            cd $out
+            ${self'.packages.test-example-render-workflows}/bin/render-workflows --no-prepend-git-root
+            ${pkgs.action-validator}/bin/action-validator .github/workflows/main.yaml
           '';
 
           nix-flake-check-example = mkRenderedTestExample {

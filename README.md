@@ -33,19 +33,77 @@ in `.github/workflows/main.yaml`.
 
 ## Installation
 
-This project uses `flake-parts`. You need to add the module exposed by this
-repository and configure your own workflows.
+### With `flake-parts`
+
+Add the module exposed by this repository and configure your workflows.
 
 ```nix
-  inputs.flake-parts.lib.mkFlake { inherit inputs; }
-    ({ self, inputs, config, flake-parts-lib, ... }@args:
-      {
-        imports = [
-          inputs.actions-nix.flakeModules.default
-          # Module config for your repository (replace with your own below)
-          # ./ci
-        ];
+inputs.flake-parts.lib.mkFlake { inherit inputs; }
+  ({ ... }: {
+    imports = [
+      inputs.actions-nix.flakeModules.default
+      # Module config for your repository (replace with your own below)
+      # ./ci
+    ];
+  });
+```
+
+### Without `flake-parts`
+
+You can also use the plain library API, similar to `treefmt-nix`: write an
+`actions-nix` config module and evaluate it yourself.
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    actions-nix.url = "github:nialov/actions.nix";
+  };
+
+  outputs = { self, nixpkgs, actions-nix }:
+    let
+      eachSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-darwin" ];
+      actionsEval = eachSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        actions-nix.lib.evalModule pkgs ./ci.nix
+      );
+    in
+    {
+      packages = eachSystem (system: {
+        render-workflows = actionsEval.${system}.config.build.renderWorkflows;
       });
+
+      checks = eachSystem (system: {
+        actions = actionsEval.${system}.config.build.check self;
+      });
+    };
+}
+```
+
+Example `ci.nix`:
+
+```nix
+{
+  defaultValues.jobs.runs-on = "ubuntu-latest";
+
+  workflows.".github/workflows/main.yaml".jobs.nix-flake-check.steps = [
+    { uses = "actions/checkout@v4"; }
+    { uses = "cachix/install-nix-action@v31"; }
+    {
+      name = "Check flake";
+      run = "nix -Lv flake check";
+    }
+  ];
+}
+```
+
+Then run:
+
+```bash
+nix run .#render-workflows
 ```
 
 ### Note on `git-hooks` import collisions

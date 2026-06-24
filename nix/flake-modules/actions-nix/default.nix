@@ -11,6 +11,9 @@ _localFlake:
   flake-parts-lib,
   ...
 }:
+let
+  actionsNixLib = import ../../lib { inherit lib; };
+in
 {
   imports = [ _localFlake.inputs.git-hooks.flakeModule ];
   options =
@@ -31,56 +34,23 @@ _localFlake:
     };
   config = {
     perSystem =
-      { pkgs, self', ... }:
+      { pkgs, ... }:
+      let
+        actionsEval = actionsNixLib.evalModule pkgs config.flake.actions-nix;
+      in
       {
         # TODO: Should definition not be automatic on flake-module import?
-        pre-commit.settings.hooks = {
-          render-actions = {
-            inherit (config.flake.actions-nix.pre-commit) enable;
-            name = "render-workflows";
-            pass_filenames = false;
-            always_run = true;
-            description = "Render nix-configured workflow to respective yaml file";
-            entry =
-              let
-                renderCI = self'.packages.render-workflows;
-                # To override the default behavior of outputting workflow files at the git repo root, pass
-                #   --no-prepend-git-root
-                # to this script; this will cause workflow files to be written relative to the process working directory instead.
-              in
-              "${renderCI}/bin/render-workflows";
-          };
+        pre-commit.settings.hooks.render-actions = {
+          inherit (config.flake.actions-nix.pre-commit) enable;
+          name = "render-workflows";
+          pass_filenames = false;
+          always_run = true;
+          description = "Render nix-configured workflow to respective yaml file";
+          entry = "${actionsEval.config.build.renderWorkflows}/bin/render-workflows";
         };
 
         # TODO: Should definition not be automatic on flake-module import?
-        packages.render-workflows =
-          (pkgs.writeShellApplication {
-            name = "render-workflows";
-            runtimeInputs = [
-              pkgs.git
-            ]
-            ++ lib.optional config.flake.actions-nix.useJJ pkgs.jj;
-            text =
-              let
-                pythonEnv = pkgs.python3.withPackages (p: [ p.pyyaml ]);
-                evaluatedCI = pkgs.writeTextFile {
-                  name = "evaluated-ci.json";
-                  text = builtins.toJSON config.flake.actions-nix.workflows;
-                };
-                cmdLine = lib.cli.toCommandLineShellGNU { } (
-                  {
-                    evaluated-ci-path = evaluatedCI;
-                  }
-                  // lib.optionalAttrs config.flake.actions-nix.useJJ {
-                    use-jj = true;
-                  }
-                );
-              in
-              ''
-                ${pythonEnv}/bin/python3 ${./render.py} ${cmdLine}
-              '';
-          }).overrideAttrs
-            { preferLocalBuild = true; };
+        packages.render-workflows = actionsEval.config.build.renderWorkflows;
       };
 
   };
