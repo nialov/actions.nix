@@ -50,8 +50,8 @@ inputs.flake-parts.lib.mkFlake { inherit inputs; }
 
 ### Without `flake-parts`
 
-You can also use the plain library API, similar to `treefmt-nix`: write an
-`actions-nix` config module and evaluate it yourself.
+You can also use the plain library API: write an `actions-nix` config module
+and evaluate it yourself.
 
 ```nix
 {
